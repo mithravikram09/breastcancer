@@ -134,7 +134,7 @@ t.test(radius_mean ~ Diagnosis, data = train_set, alternative = "two.sided",
 # Confidence level is always typically set at 0.95 in medical research
 # NOTE: arguments 3 to 6 needed NOT be defined. By default R will choose it
 # Type ? t.test for more information
-
+t.test(radius_mean ~ Diagnosis, data = train_set)
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
@@ -197,6 +197,7 @@ t.test(area_worst ~ Diagnosis, data = train_set)
 # Smoothness
 #############
 ## Mean
+
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(smoothness_mean), Std = sd(smoothness_mean))
@@ -382,7 +383,7 @@ Fig1<- grid.arrange(r_mean, r_worst, # grid.arrange is a function of gridExtra
 # number of rows will be guessed by
 # the number of objects- here it will be 5
 
-ggsave(filename = "Fig1.png",  # File name we want (will be saved in our working directory)
+ggsave(filename = "Fig1.jpeg",  # File name we want (will be saved in our working directory)
        plot = Fig1,
        width = 960,
        height = 1200,
@@ -474,7 +475,7 @@ Fig2<- grid.arrange(com_mean, com_worst,
                     sym_mean, sym_worst,
                     fra_mean, fra_worst, ncol = 2)
 
-ggsave(filename = "Fig2.png",  
+ggsave(filename = "Fig2.jpeg",  
        plot = Fig2,
        width = 960,
        height = 1200,
@@ -515,17 +516,17 @@ Fig3<- ggcorr(pred_train, low = "#FF0000", mid = "#FFFFFF", high = "#00FF00",
        SY = symmetry, FD = fractal dimension. M reprsents mean and W the worst") +
   theme(plot.caption = element_text(size = 3))
 
-ggsave("Fig3.png",
+ggsave("Fig3.jpeg",
        Fig3,
        width = 700,
        height = 700,
        units = "px")
-### insert find correlation method here
+###  find correlation method here
 
+
+findCorrelation(cor(pred_train),cutoff = 0.75, names=TRUE)
 
 remove(Fig3, pred_train)
-
-
 
 #########################################
 # two training data and two testing data
@@ -636,9 +637,12 @@ qda_fit19_pred<- predict(qda_fit19, newdata = test_set_19, type = "raw")
 table(qda_fit19_pred, test_set$Diagnosis)
 # accuracy
 BinomCI(160, 172)
+
 # sensitivity
+
 BinomCI(62, 64)
 # specificity
+
 BinomCI(98, 108)
 
 ## 6 predictors
@@ -718,7 +722,7 @@ knn_fit6$bestTune
 
 Fig4<- grid.arrange(p1, p2, ncol = 1)
 
-ggsave("Fig4.png",
+ggsave("Fig4.jpeg",
        Fig4,
        width = 1200,
        height = 1200,
@@ -806,7 +810,7 @@ text(tree_fit6$finalModel, cex = 0.75)
 ###################################
 Fig5<- grid.arrange(p1, p2, ncol = 1)
 
-ggsave("Fig5.png",
+ggsave("Fig5.jpeg",
        Fig5,
        height = 1200,
        width = 1000,

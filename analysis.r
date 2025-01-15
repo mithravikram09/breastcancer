@@ -122,25 +122,20 @@ options(pillar.sigfig = 5)
 train_set %>% # group_by and summarise functions are part of dplyr package
   group_by(Diagnosis) %>%  # Avg = mean and Std is standard deviation
   summarise(Avg = mean(radius_mean), Std = sd(radius_mean))
-
-t.test(radius_mean ~ Diagnosis, data = train_set, alternative = "two.sided",
-       paired = F, var.equal = F, conf.level = 0.95) 
+wilcox.test(radius_mean ~ Diagnosis, data = train_set)
+ 
 # The first argument is the formula (generically y ~ a factor x)
 # The second argument is the name of the data
 # The third is to see for difference in both sides (higher or lower)
-# Paired is for pre and post measurement. Here there are two groups- malignant and benign
-# It is best to set equal variance assumption to False. Else, a test to
-# determine equal variance should be done
-# Confidence level is always typically set at 0.95 in medical research
-# NOTE: arguments 3 to 6 needed NOT be defined. By default R will choose it
-# Type ? t.test for more information
-t.test(radius_mean ~ Diagnosis, data = train_set)
+
+# Type ? wilcox.test for more information
+wilcox.test(radius_mean ~ Diagnosis, data = train_set)
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(radius_worst), Std = sd(radius_worst))
 
-t.test(radius_worst ~ Diagnosis, data = train_set)
+wilcox.test(radius_worst ~ Diagnosis, data = train_set)
 
 #########
 # Texture
@@ -150,14 +145,14 @@ train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(texture_mean), Std = sd(texture_mean))
 
-t.test(texture_mean ~ Diagnosis, data = train_set)
+wilcox.test(texture_mean ~ Diagnosis, data = train_set)
 
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(texture_worst), Std = sd(texture_worst))
 
-t.test(texture_worst ~ Diagnosis, data = train_set)
+wilcox.test(texture_worst ~ Diagnosis, data = train_set)
 
 #############
 # Perimeter
@@ -167,14 +162,14 @@ train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(perimeter_mean), Std = sd(perimeter_mean))
 
-t.test(perimeter_mean ~ Diagnosis, data = train_set)
+wilcox.test(perimeter_mean ~ Diagnosis, data = train_set)
 
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(perimeter_worst), Std = sd(perimeter_worst))
 
-t.test(perimeter_worst ~ Diagnosis, data = train_set)
+wilcox.test(perimeter_worst ~ Diagnosis, data = train_set)
 
 ########
 # Area
@@ -184,14 +179,14 @@ train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(area_mean), Std = sd(area_mean))
 
-t.test(area_mean ~ Diagnosis, data = train_set)
+wilcox.test(area_mean ~ Diagnosis, data = train_set)
 
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(area_worst), Std = sd(area_worst))
 
-t.test(area_worst ~ Diagnosis, data = train_set)
+wilcox.test(area_worst ~ Diagnosis, data = train_set)
 
 #############
 # Smoothness
@@ -202,14 +197,14 @@ train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(smoothness_mean), Std = sd(smoothness_mean))
 
-t.test(smoothness_mean ~ Diagnosis, data = train_set)
+wilcox.test(smoothness_mean ~ Diagnosis, data = train_set)
 
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(smoothness_worst), Std = sd(smoothness_worst))
 
-t.test(smoothness_worst ~ Diagnosis, data = train_set)
+wilcox.test(smoothness_worst ~ Diagnosis, data = train_set)
 
 #################
 # Compactness
@@ -219,14 +214,14 @@ train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(compactness_mean), Std = sd(compactness_mean))
 
-t.test(compactness_mean ~ Diagnosis, data = train_set)
+wilcox.test(compactness_mean ~ Diagnosis, data = train_set)
 
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(compactness_worst), Std = sd(compactness_worst))
 
-t.test(compactness_worst ~ Diagnosis, data = train_set)
+wilcox.test(compactness_worst ~ Diagnosis, data = train_set)
 
 ##############
 # Concavity
@@ -236,14 +231,14 @@ train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(concavity_mean), Std = sd(concavity_mean))
 
-t.test(concavity_mean ~ Diagnosis, data = train_set)
+wilcox.test(concavity_mean ~ Diagnosis, data = train_set)
 
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(concavity_worst), Std = sd(concavity_worst))
 
-t.test(concavity_worst ~ Diagnosis, data = train_set)
+wilcox.test(concavity_worst ~ Diagnosis, data = train_set)
 
 ################
 # Concave points
@@ -253,14 +248,14 @@ train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(concave_points_mean), Std = sd(concave_points_mean))
 
-t.test(concave_points_mean ~ Diagnosis, data = train_set)
+wilcox.test(concave_points_mean ~ Diagnosis, data = train_set)
 
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(concave_points_worst), Std = sd(concave_points_worst))
 
-t.test(concave_points_worst ~ Diagnosis, data = train_set)
+wilcox.test(concave_points_worst ~ Diagnosis, data = train_set)
 
 ##########
 # Symmetry
@@ -270,14 +265,14 @@ train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(symmetry_mean), Std = sd(symmetry_mean))
 
-t.test(symmetry_mean ~ Diagnosis, data = train_set)
+wilcox.test(symmetry_mean ~ Diagnosis, data = train_set)
 
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(symmetry_worst), Std = sd(symmetry_worst))
 
-t.test(symmetry_worst ~ Diagnosis, data = train_set)
+wilcox.test(symmetry_worst ~ Diagnosis, data = train_set)
 
 ####################
 # Fractal dimension
@@ -287,14 +282,14 @@ train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(fractal_dimension_mean), Std = sd(fractal_dimension_mean))
 
-t.test(fractal_dimension_mean ~ Diagnosis, data = train_set)
+wilcox.test(fractal_dimension_mean ~ Diagnosis, data = train_set)
 
 ## Worst
 train_set %>%
   group_by(Diagnosis) %>%  
   summarise(Avg = mean(fractal_dimension_worst), Std = sd(fractal_dimension_worst))
 
-t.test(fractal_dimension_worst ~ Diagnosis, data = train_set)
+wilcox.test(fractal_dimension_worst ~ Diagnosis, data = train_set)
 
 #################
 # Figure 1 codes

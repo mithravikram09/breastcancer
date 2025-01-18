@@ -55,6 +55,10 @@ if(!require(ggcorrplot)) install.packages("ggcorrplot", repos = "http://cran.us.
 if(!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.org")
 if(!require(rpart)) install.packages("rpart", repos = "http://cran.us.r-project.org")
 if(!require(randomForest)) install.packages("randomForest", repos = "http://cran.us.r-project.org")
+if(!require(FactoMineR)) install.packages("FactoMineR", repos = "http://cran.us.r-project.org")
+if(!require(infotheo)) install.packages("infotheo", repos = "http://cran.us.r-project.org")
+if(!require(GGally)) install.packages("GGally", repos = "http://cran.us.r-project.org")  # Correct package for ggcorr
+
 
 # The above lines of codes downloads and loads the libraries (if not installed already)
 # The first four packages are useful for data wangling and plots
@@ -123,7 +127,7 @@ train_set %>% # group_by and summarise functions are part of dplyr package
   group_by(Diagnosis) %>%  # Avg = mean and Std is standard deviation
   summarise(Avg = mean(radius_mean), Std = sd(radius_mean))
 wilcox.test(radius_mean ~ Diagnosis, data = train_set)
- 
+
 # The first argument is the formula (generically y ~ a factor x)
 # The second argument is the name of the data
 # The third is to see for difference in both sides (higher or lower)
@@ -523,6 +527,8 @@ findCorrelation(cor(pred_train),cutoff = 0.75, names=TRUE)
 
 remove(Fig3, pred_train)
 
+
+
 #########################################
 # two training data and two testing data
 #########################################
@@ -618,9 +624,51 @@ BinomCI(166, 172)
 # sensitivity
 BinomCI(62, 64)
 # specificity
-BinomCI(104, 108)
+BinomCI(104, 106)
 
-remove(lg_fit19, lg_fit19_pred, lg_fit6, lg_fit6_pred, scale2)
+## Reducing Features using PCA and applying Logistic Regression
+
+## Dimentionality Reduction with PCA##
+
+# PCA for dimensionality reduction
+pca_result <- PCA(train_set[, -c(1, 2)], graph = FALSE)
+summary(pca_result)
+
+num_components <- min(10, ncol(pca_result$ind$coord))
+train_set_pca <- data.frame(Diagnosis = train_set$Diagnosis, pca_result$ind$coord[, 1:num_components])
+
+# Transform the test set using the PCA result
+test_set_pca_values <- predict(pca_result, newdata = test_set[, -c(1, 2)])$coord[, 1:num_components]
+test_set_pca <- data.frame(Diagnosis = test_set$Diagnosis, test_set_pca_values)
+
+
+
+
+lg_fitpca<- glm(Diagnosis ~ ., family = "binomial", data = train_set_pca)
+# message due to correlation
+levels(train_set_pca$Diagnosis)
+# glm by default gives the odds of the second level
+
+summary(lg_fitpca)
+
+# Odds ratio for each predictors
+exp(lg_fitpca$coefficients)
+
+
+lg_fitpca_pred<- predict(lg_fitpca, newdata = test_set_pca, type = "response")
+lg_fitpca_pred<- ifelse(lg_fitpca_pred <= 0.5, "Malignant", "Benign")
+
+
+lg_fitpca_pred<- factor(lg_fitpca_pred, levels = c("Malignant", "Benign"))
+
+table(lg_fitpca_pred, test_set_pca$Diagnosis)
+
+# accuracy
+BinomCI(168, 172)
+# sensitivity
+BinomCI(61, 62)
+# specificity
+BinomCI(107, 110)
 
 #######
 # QDA

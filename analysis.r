@@ -637,38 +637,7 @@ summary(pca_result)
 num_components <- min(10, ncol(pca_result$ind$coord))
 train_set_pca <- data.frame(Diagnosis = train_set$Diagnosis, pca_result$ind$coord[, 1:num_components])
 
-# Transform the test set using the PCA result
-test_set_pca_values <- predict(pca_result, newdata = test_set[, -c(1, 2)])$coord[, 1:num_components]
-test_set_pca <- data.frame(Diagnosis = test_set$Diagnosis, test_set_pca_values)
 
-
-
-
-lg_fitpca<- glm(Diagnosis ~ ., family = "binomial", data = train_set_pca)
-# message due to correlation
-levels(train_set_pca$Diagnosis)
-# glm by default gives the odds of the second level
-
-summary(lg_fitpca)
-
-# Odds ratio for each predictors
-exp(lg_fitpca$coefficients)
-
-
-lg_fitpca_pred<- predict(lg_fitpca, newdata = test_set_pca, type = "response")
-lg_fitpca_pred<- ifelse(lg_fitpca_pred <= 0.5, "Malignant", "Benign")
-
-
-lg_fitpca_pred<- factor(lg_fitpca_pred, levels = c("Malignant", "Benign"))
-
-table(lg_fitpca_pred, test_set_pca$Diagnosis)
-
-# accuracy
-BinomCI(168, 172)
-# sensitivity
-BinomCI(61, 62)
-# specificity
-BinomCI(107, 110)
 
 #######
 # QDA
@@ -917,3 +886,46 @@ BinomCI(161, 172)
 BinomCI(59, 64)
 # specificity
 BinomCI(102, 108)
+
+# Transform the test set using the PCA result and using the 2 most accurate algorithms
+test_set_pca_values <- predict(pca_result, newdata = test_set[, -c(1, 2)])$coord[, 1:num_components]
+test_set_pca <- data.frame(Diagnosis = test_set$Diagnosis, test_set_pca_values)
+
+
+
+######Logistic Regression########
+lg_fitpca<- glm(Diagnosis ~ ., family = "binomial", data = train_set_pca)
+# message due to correlation
+levels(train_set_pca$Diagnosis)
+# glm by default gives the odds of the second level
+
+summary(lg_fitpca)
+
+# Odds ratio for each predictors
+exp(lg_fitpca$coefficients)
+
+
+lg_fitpca_pred<- predict(lg_fitpca, newdata = test_set_pca, type = "response")
+lg_fitpca_pred<- ifelse(lg_fitpca_pred <= 0.5, "Malignant", "Benign")
+
+
+lg_fitpca_pred<- factor(lg_fitpca_pred, levels = c("Malignant", "Benign"))
+
+table(lg_fitpca_pred, test_set_pca$Diagnosis)
+
+# accuracy
+BinomCI(168, 172)
+# sensitivity
+BinomCI(61, 62)
+# specificity
+BinomCI(107, 110)
+
+#### Random Forest####
+rf_fitpca<- train(Diagnosis ~ ., method = "rf",
+                data = train_set_pca)
+
+rf_fitpca_pred<- predict(rf_fitpca, newdata = train_set_pca)
+
+table(rf_fitpca_pred, test_set_pca$Diagnosis)
+
+

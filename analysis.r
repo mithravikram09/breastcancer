@@ -503,9 +503,39 @@ remove(com_mean, com_worst, con_mean, con_worst, con1_mean,
 ###############
 # Figure 3 code
 ###############
+# Define pred_train
+pred_train <- train_set %>% 
+  select(-c(ID, Diagnosis, fractal_dimension_mean))
+
+pred_train <- pred_train %>%  
+  rename(RM = "radius_mean", RW = "radius_worst",
+         TM = "texture_mean", TW = "texture_worst",
+         PM = "perimeter_mean", PW = "perimeter_worst",
+         AM = "area_mean", AW = "area_worst",
+         SM_M = "smoothness_mean", SM_W = "smoothness_worst",
+         COM_M = "compactness_mean", COM_W = "compactness_worst",
+         CON_M = "concavity_mean", CON_W = "concavity_worst",
+         CPM = "concave_points_mean", CPW = "concave_points_worst",
+         SYM = "symmetry_mean", SYW = "symmetry_worst",
+         FDW = "fractal_dimension_worst")
+
+# Figure 3 code
 Fig3 <- ggcorr(pred_train, low = "#E69F00", mid = "#FFFFFF", high = "#56B4E9", 
-              label = TRUE, label_round = 2, legend.position = "none", size = 1,
-              label_size = 1) +
+               label = TRUE, label_round = 2, legend.position = "none", size = 1,
+               label_size = 1) +
+  labs(caption = "R = radius, T = texture, P = perimeter, A = area, SM = smoothness,
+       COM = compactness, CON = concavity, CP = concave points,
+       SY = symmetry, FD = fractal dimension. M reprsents mean and W the worst") +
+  theme(plot.caption = element_text(size = 3))
+
+ggsave("Fig3.jpeg",
+       Fig3,
+       width = 700,
+       height = 700,
+       units = "px")
+Fig3 <- ggcorr(pred_train, low = "#E69F00", mid = "#FFFFFF", high = "#56B4E9", 
+               label = TRUE, label_round = 2, legend.position = "none", size = 1,
+               label_size = 1) +
   labs(caption = "R = radius, T = texture, P = perimeter, A = area, SM = smoothness,
        COM = compactness, CON = concavity, CP = concave points,
        SY = symmetry, FD = fractal dimension. M reprsents mean and W the worst") +
@@ -696,7 +726,7 @@ BinomCI(107, 108)
 remove(lda_fit19, lda_fit19_pred, lda_fit6, lda_fit6_pred)
 
 ########
-kNN
+# kNN
 ########
 fitControl <- trainControl(
   method = "repeatedcv",
@@ -710,7 +740,7 @@ knn_fit19 <- train(Diagnosis ~ ., method = "knn",
                    tuneGrid = data.frame(k = seq(3, 45, 2)),
                    trControl = fitControl)
 
-p1<- ggplot(knn_fit19, highlight = TRUE) + theme_classic() +
+p1 <- ggplot(knn_fit19, highlight = TRUE) + theme_classic() +
   ggtitle("CV with 19 predictors") + ylab("Accuracy") +
   theme(title = element_text(size = 8))
 
@@ -722,13 +752,13 @@ knn_fit6 <- train(Diagnosis ~ ., method = "knn",
                   tuneGrid = data.frame(k = seq(3, 45, 2)),
                   trControl = fitControl)
 
-p2<- ggplot(knn_fit6, highlight = TRUE) + theme_classic() +
+p2 <- ggplot(knn_fit6, highlight = TRUE) + theme_classic() +
   ggtitle("CV with six predictors") + ylab("Accuracy") +
   theme(title = element_text(size = 8))
 
 knn_fit6$bestTune
 
-Fig4<- grid.arrange(p1, p2, ncol = 1)
+Fig4 <- grid.arrange(p1, p2, ncol = 1)
 
 ggsave("Fig4.jpeg",
        Fig4,
@@ -739,8 +769,8 @@ ggsave("Fig4.jpeg",
 remove(Fig4, p1, p2)
 
 ## 19 predictors
-knn_fit19_pred<- predict(knn_fit19, newdata = test_set_19,
-                         type = "raw")
+knn_fit19_pred <- predict(knn_fit19, newdata = test_set_19,
+                          type = "raw")
 
 table(knn_fit19_pred, test_set$Diagnosis)
 
@@ -752,8 +782,8 @@ BinomCI(60, 64)
 BinomCI(105, 108)
 
 ## six predictors
-knn_fit6_pred<- predict(knn_fit6, newdata = test_set_6,
-                        type = "raw")
+knn_fit6_pred <- predict(knn_fit6, newdata = test_set_6,
+                         type = "raw")
 
 table(knn_fit6_pred, test_set$Diagnosis)
 
@@ -765,10 +795,6 @@ BinomCI(57, 64)
 BinomCI(102, 108)
 
 remove(knn_fit19, knn_fit19_pred, knn_fit6, knn_fit6_pred, fitControl)
-
-# For the remaining two algorithm we do not need scaled values
-remove(train_set_19, test_set_19, train_set_6, test_set_6,
-       scale2)
 
 ######################
 # Classification tree
@@ -918,10 +944,15 @@ BinomCI(107, 110)
 
 #### Random Forest####
 rf_fitpca<- train(Diagnosis ~ ., method = "rf",
-                data = train_set_pca)
+                  data = train_set_pca)
 
-rf_fitpca_pred<- predict(rf_fitpca, newdata = train_set_pca)
+rf_fitpca_pred<- predict(rf_fitpca, newdata = test_set_pca)
 
 table(rf_fitpca_pred, test_set_pca$Diagnosis)
 
-
+# accuracy
+BinomCI(162, 172)
+# sensitivity
+BinomCI(60, 66)
+# specificity
+BinomCI(102, 106)

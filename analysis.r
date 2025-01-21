@@ -299,180 +299,195 @@ wilcox.test(fractal_dimension_worst ~ Diagnosis, data = train_set)
 # Figure 1 codes
 #################
 
-r_mean<- train_set %>% # this plot is made using ggplot2
-  # for boxplot x should be a factor variable and y numeric
-  ggplot(aes(x = Diagnosis, y = radius_mean)) +
+# Color-blind friendly palette
+cb_palette <- c("#E69F00", "#56B4E9")
+
+r_mean <- train_set %>% 
+  ggplot(aes(x = Diagnosis, y = radius_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
-  ggtitle("Fig 1A: Radius mean") + # title of the plot
-  ylab("") +                       # since the title indicate the feature
-  # we do not want to have it in axis again
-  theme(plot.title = element_text(size = 7.5)) # control the text size
-# the plot is saved as an object to merge
-r_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = radius_worst)) +
+  scale_fill_manual(values = cb_palette) +
+  ggtitle("Fig 1A: Radius mean") + 
+  ylab("") +                       
+  theme(plot.title = element_text(size = 7.5))
+
+r_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = radius_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1B: Radius worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-
-tex_mean<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = texture_mean)) +
+tex_mean <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = texture_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1C: Texture mean") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-tex_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = texture_worst)) +
+tex_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = texture_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1D: Texture worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-per_mean<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = perimeter_mean)) +
+per_mean <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = perimeter_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1E: Perimeter mean") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-per_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = perimeter_worst)) +
+per_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = perimeter_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1F: Perimeter worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-are_mean<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = area_mean)) +
+are_mean <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = area_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1G: Area mean") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-are_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = area_worst)) +
+are_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = area_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1H: Area worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-
-smo_mean<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = smoothness_mean)) +
+smo_mean <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = smoothness_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1I: Smoothness mean") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-smo_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = smoothness_worst)) +
+smo_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = smoothness_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1J: Smoothness worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-Fig1<- grid.arrange(r_mean, r_worst, # grid.arrange is a function of gridExtra
-                    # Merges the plot saved as objects
-                    tex_mean, tex_worst,
-                    per_mean, per_worst,
-                    are_mean, are_worst,
-                    smo_mean, smo_worst, ncol = 2) # Number of columns
-# number of rows will be guessed by
-# the number of objects- here it will be 5
+Fig1 <- grid.arrange(r_mean, r_worst, 
+                     tex_mean, tex_worst,
+                     per_mean, per_worst,
+                     are_mean, are_worst,
+                     smo_mean, smo_worst, ncol = 2)
 
-ggsave(filename = "Fig1.jpeg",  # File name we want (will be saved in our working directory)
+ggsave(filename = "Fig1.jpeg",  
        plot = Fig1,
        width = 960,
        height = 1200,
-       dpi = 150,              # resolution
-       units = "px",           # unit of the width and height
+       dpi = 150,             
+       units = "px",          
        limitsize = F)
 
 remove(r_mean, r_worst, tex_mean, tex_worst, per_mean, per_worst,
        are_mean, are_worst, smo_mean, smo_worst, Fig1)
 
-################
+######################
 # Figure 2 codes
-################
+####################
 
-com_mean<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = compactness_mean)) +
+com_mean <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = compactness_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2A: Compactness mean") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-com_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = compactness_worst)) +
+com_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = compactness_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2B: Compactness worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-con_mean<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = concavity_mean)) +
+con_mean <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = concavity_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2C: Concavity mean") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-con_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = concavity_worst)) +
+con_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = concavity_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2D: Concavity worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-con1_mean<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = concave_points_mean)) +
+con1_mean <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = concave_points_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2E: Concave points mean") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-
-con1_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = concave_points_worst)) +
+con1_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = concave_points_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2F: Concave points worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-sym_mean<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = symmetry_mean)) +
+sym_mean <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = symmetry_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2G: Symmetry mean") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-sym_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = symmetry_worst)) +
+sym_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = symmetry_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2H: Symmetry worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-fra_mean<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = fractal_dimension_mean)) +
+fra_mean <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = fractal_dimension_mean, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2I: Fractal dimension mean") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-fra_worst<- train_set %>%
-  ggplot(aes(x = Diagnosis, y = fractal_dimension_worst)) +
+fra_worst <- train_set %>%
+  ggplot(aes(x = Diagnosis, y = fractal_dimension_worst, fill = Diagnosis)) +
   geom_boxplot() + theme_classic() +
+  scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 2J: Fractal dimension worst") + 
   ylab("") +
   theme(plot.title = element_text(size = 7.5))
 
-Fig2<- grid.arrange(com_mean, com_worst,
-                    con_mean, con_worst,
-                    con1_mean, con1_worst,
-                    sym_mean, sym_worst,
-                    fra_mean, fra_worst, ncol = 2)
+Fig2 <- grid.arrange(com_mean, com_worst,
+                     con_mean, con_worst,
+                     con1_mean, con1_worst,
+                     sym_mean, sym_worst,
+                     fra_mean, fra_worst, ncol = 2)
 
 ggsave(filename = "Fig2.jpeg",  
        plot = Fig2,
@@ -485,29 +500,10 @@ ggsave(filename = "Fig2.jpeg",
 remove(com_mean, com_worst, con_mean, con_worst, con1_mean,
        con1_worst, sym_mean, sym_worst, fra_mean, fra_worst, Fig2)
 
-################################################
-# Checking for correlation within the predictors
-################################################
-
-pred_train<- train_set %>% # removing the ID, diagnosis and fractal dimension mean. Fractal dimension mean is removed because of its high P value. ID is removed as it adds nothing to the model
-  select(-c(ID, Diagnosis, fractal_dimension_mean))
-
-pred_train<- pred_train %>%  # Renaming predictors name to fit in plot
-  rename(RM = "radius_mean", RW = "radius_worst",
-         TM = "texture_mean", TW = "texture_worst",
-         PM = "perimeter_mean", PW = "perimeter_worst",
-         AM = "area_mean", AW = "area_worst",
-         SM_M = "smoothness_mean", SM_W = "smoothness_worst",
-         COM_M = "compactness_mean", COM_W = "compactness_worst",
-         CON_M = "concavity_mean", CON_W = "concavity_worst",
-         CPM = "concave_points_mean", CPW = "concave_points_worst",
-         SYM = "symmetry_mean", SYW = "symmetry_worst",
-         FDW = "fractal_dimension_worst")
-
 ###############
 # Figure 3 code
 ###############
-Fig3<- ggcorr(pred_train, low = "#FF0000", mid = "#FFFFFF", high = "#00FF00", 
+Fig3 <- ggcorr(pred_train, low = "#E69F00", mid = "#FFFFFF", high = "#56B4E9", 
               label = TRUE, label_round = 2, legend.position = "none", size = 1,
               label_size = 1) +
   labs(caption = "R = radius, T = texture, P = perimeter, A = area, SM = smoothness,

@@ -533,9 +533,6 @@ ggsave("Fig3.jpeg",
 Fig3 <- ggcorr(pred_train, low = "#E69F00", mid = "#FFFFFF", high = "#56B4E9", 
                label = TRUE, label_round = 2, legend.position = "none", size = 1,
                label_size = 1) +
-  labs(caption = "R = radius, T = texture, P = perimeter, A = area, SM = smoothness,
-       COM = compactness, CON = concavity, CP = concave points,
-       SY = symmetry, FD = fractal dimension. M reprsents mean and W the worst") +
   theme(plot.caption = element_text(size = 3))
 
 ggsave("Fig3.jpeg",

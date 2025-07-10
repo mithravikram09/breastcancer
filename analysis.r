@@ -58,7 +58,12 @@ if(!require(randomForest)) install.packages("randomForest", repos = "http://cran
 if(!require(FactoMineR)) install.packages("FactoMineR", repos = "http://cran.us.r-project.org")
 if(!require(infotheo)) install.packages("infotheo", repos = "http://cran.us.r-project.org")
 if(!require(GGally)) install.packages("GGally", repos = "http://cran.us.r-project.org")  # Correct package for ggcorr
+if(!require(ggpubr)) install.packages("ggpubr", repos = "http://cran.us.r-project.org")
 
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+library(ggpubr)
 
 # The above lines of codes downloads and loads the libraries (if not installed already)
 # The first four packages are useful for data wangling and plots
@@ -300,6 +305,7 @@ wilcox.test(fractal_dimension_worst ~ Diagnosis, data = train_set)
 #################
 
 # Figure 1 codes
+# Color palette for plots
 cb_palette <- c("#E69F00", "#56B4E9")
 
 r_mean <- train_set %>% 
@@ -308,7 +314,11 @@ r_mean <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1A: Radius mean (mm)") + 
   ylab("Radius (mm)") +                       
-  theme(plot.title = element_text(size = 7.5))
+  theme(plot.title = element_text(size = 7.5)) +
+  stat_compare_means(method = "wilcox.test", label = "p.signif", 
+                     label.y = max(train_set$radius_mean, na.rm = TRUE) * 1.08, size = 4) +
+  stat_compare_means(method = "wilcox.test", label = "p.format", 
+                     label.y = max(train_set$radius_mean, na.rm = TRUE) * 1.04, size = 3)
 
 r_worst <- train_set %>%
   ggplot(aes(x = Diagnosis, y = radius_worst, fill = Diagnosis)) +
@@ -316,7 +326,11 @@ r_worst <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1B: Radius worst (mm)") + 
   ylab("Radius (mm)") +
-  theme(plot.title = element_text(size = 7.5), legend.position = "none")
+  theme(plot.title = element_text(size = 7.5), legend.position = "none") +
+  stat_compare_means(method = "wilcox.test", label = "p.signif", 
+                     label.y = max(train_set$radius_worst, na.rm = TRUE) * 1.08, size = 4) +
+  stat_compare_means(method = "wilcox.test", label = "p.format", 
+                     label.y = max(train_set$radius_worst, na.rm = TRUE) * 1.04, size = 3)
 
 tex_mean <- train_set %>%
   ggplot(aes(x = Diagnosis, y = texture_mean, fill = Diagnosis)) +
@@ -324,7 +338,11 @@ tex_mean <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1C: Texture mean") + 
   ylab("Texture") +
-  theme(plot.title = element_text(size = 7.5), legend.position = "none")
+  theme(plot.title = element_text(size = 7.5), legend.position = "none") +
+  stat_compare_means(method = "wilcox.test", label = "p.signif", 
+                     label.y = max(train_set$texture_mean, na.rm = TRUE) * 1.08, size = 4) +
+  stat_compare_means(method = "wilcox.test", label = "p.format", 
+                     label.y = max(train_set$texture_mean, na.rm = TRUE) * 1.04, size = 3)
 
 tex_worst <- train_set %>%
   ggplot(aes(x = Diagnosis, y = texture_worst, fill = Diagnosis)) +
@@ -332,7 +350,11 @@ tex_worst <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1D: Texture worst") + 
   ylab("Texture") +
-  theme(plot.title = element_text(size = 7.5), legend.position = "none")
+  theme(plot.title = element_text(size = 7.5), legend.position = "none") +
+  stat_compare_means(method = "wilcox.test", label = "p.signif", 
+                     label.y = max(train_set$texture_worst, na.rm = TRUE) * 1.08, size = 4) +
+  stat_compare_means(method = "wilcox.test", label = "p.format", 
+                     label.y = max(train_set$texture_worst, na.rm = TRUE) * 1.04, size = 3)
 
 per_mean <- train_set %>%
   ggplot(aes(x = Diagnosis, y = perimeter_mean, fill = Diagnosis)) +
@@ -340,7 +362,11 @@ per_mean <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1E: Perimeter mean (mm)") + 
   ylab("Perimeter (mm)") +
-  theme(plot.title = element_text(size = 7.5), legend.position = "none")
+  theme(plot.title = element_text(size = 7.5), legend.position = "none") +
+  stat_compare_means(method = "wilcox.test", label = "p.signif", 
+                     label.y = max(train_set$perimeter_mean, na.rm = TRUE) * 1.08, size = 4) +
+  stat_compare_means(method = "wilcox.test", label = "p.format", 
+                     label.y = max(train_set$perimeter_mean, na.rm = TRUE) * 1.04, size = 3)
 
 per_worst <- train_set %>%
   ggplot(aes(x = Diagnosis, y = perimeter_worst, fill = Diagnosis)) +
@@ -348,7 +374,11 @@ per_worst <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1F: Perimeter worst (mm)") + 
   ylab("Perimeter (mm)") +
-  theme(plot.title = element_text(size = 7.5), legend.position = "none")
+  theme(plot.title = element_text(size = 7.5), legend.position = "none") +
+  stat_compare_means(method = "wilcox.test", label = "p.signif", 
+                     label.y = max(train_set$perimeter_worst, na.rm = TRUE) * 1.08, size = 4) +
+  stat_compare_means(method = "wilcox.test", label = "p.format", 
+                     label.y = max(train_set$perimeter_worst, na.rm = TRUE) * 1.04, size = 3)
 
 are_mean <- train_set %>%
   ggplot(aes(x = Diagnosis, y = area_mean, fill = Diagnosis)) +
@@ -356,7 +386,11 @@ are_mean <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1G: Area mean (mm²)") + 
   ylab("Area (mm²)") +
-  theme(plot.title = element_text(size = 7.5), legend.position = "none")
+  theme(plot.title = element_text(size = 7.5), legend.position = "none") +
+  stat_compare_means(method = "wilcox.test", label = "p.signif", 
+                     label.y = max(train_set$area_mean, na.rm = TRUE) * 1.08, size = 4) +
+  stat_compare_means(method = "wilcox.test", label = "p.format", 
+                     label.y = max(train_set$area_mean, na.rm = TRUE) * 1.04, size = 3)
 
 are_worst <- train_set %>%
   ggplot(aes(x = Diagnosis, y = area_worst, fill = Diagnosis)) +
@@ -364,7 +398,11 @@ are_worst <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1H: Area worst (mm²)") + 
   ylab("Area (mm²)") +
-  theme(plot.title = element_text(size = 7.5), legend.position = "none")
+  theme(plot.title = element_text(size = 7.5), legend.position = "none") +
+  stat_compare_means(method = "wilcox.test", label = "p.signif", 
+                     label.y = max(train_set$area_worst, na.rm = TRUE) * 1.08, size = 4) +
+  stat_compare_means(method = "wilcox.test", label = "p.format", 
+                     label.y = max(train_set$area_worst, na.rm = TRUE) * 1.04, size = 3)
 
 smo_mean <- train_set %>%
   ggplot(aes(x = Diagnosis, y = smoothness_mean, fill = Diagnosis)) +
@@ -372,7 +410,11 @@ smo_mean <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1I: Smoothness mean") + 
   ylab("Smoothness") +
-  theme(plot.title = element_text(size = 7.5), legend.position = "none")
+  theme(plot.title = element_text(size = 7.5), legend.position = "none") +
+  stat_compare_means(method = "wilcox.test", label = "p.signif", 
+                     label.y = max(train_set$smoothness_mean, na.rm = TRUE) * 1.08, size = 4) +
+  stat_compare_means(method = "wilcox.test", label = "p.format", 
+                     label.y = max(train_set$smoothness_mean, na.rm = TRUE) * 1.04, size = 3)
 
 smo_worst <- train_set %>%
   ggplot(aes(x = Diagnosis, y = smoothness_worst, fill = Diagnosis)) +
@@ -380,8 +422,18 @@ smo_worst <- train_set %>%
   scale_fill_manual(values = cb_palette) +
   ggtitle("Fig 1J: Smoothness worst") + 
   ylab("Smoothness") +
-  theme(plot.title = element_text(size = 7.5), legend.position = "none")
+  theme(plot.title = element_text(size = 7.5), legend.position = "none") +
+  stat_compare_means(method = "wilcox.test", label = "p.signif",
+                     label.y = max(train_set$smoothness_worst, na.rm = TRUE) * 1.18, size = 5) +
+  stat_compare_means(method = "wilcox.test", label = "p.format",
+                     label.y = max(train_set$smoothness_worst, na.rm = TRUE) * 1.08, size = 4) +
+  expand_limits(y = max(train_set$smoothness_worst, na.rm = TRUE) * 1.25)
 
+df <- data.frame(
+  Diagnosis = rep(c("Malignant", "Benign"), each = 50),
+  smoothness_worst = c(rnorm(50, 0.13, 0.01), rnorm(50, 0.12, 0.01))
+)
+# Arrange and save as before
 Fig1 <- grid.arrange(r_mean, r_worst, 
                      tex_mean, tex_worst,
                      per_mean, per_worst,
